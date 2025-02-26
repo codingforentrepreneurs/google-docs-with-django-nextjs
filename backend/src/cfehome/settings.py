@@ -89,7 +89,7 @@ DATABASES = {
 
 DATABASE_URL = config("DATABASE_URL", cast=str, default="")
 if DATABASE_URL:
-    if DATABASE_URL.startswith("postgres://"):
+    if DATABASE_URL.startswith("postgres://") or DATABASE_URL.startswith("postgresql://"):
         import dj_database_url
 
         DATABASES = {
