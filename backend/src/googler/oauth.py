@@ -12,7 +12,7 @@ from . import security
 GOOGLE_AUTH_CACHE_KEY_PREFIX = "google:auth:state"
 GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
 GOOGLE_SECRET_KEY = settings.GOOGLE_SECRET_KEY
-
+GOOGLE_AUTH_BASE_URL = settings.GOOGLE_AUTH_BASE_URL
 
 def get_google_auth_callback_path():
     return reverse("googler:callback")
@@ -20,7 +20,7 @@ def get_google_auth_callback_path():
 
 def get_google_oauth_callback_url(drop_https=False, force_https=False):
     callback_path = getattr(settings, 'GOOGLE_AUTH_CALLBACK_PATH', None) or get_google_auth_callback_path()
-    url =  urljoin(settings.BASE_URL, callback_path)
+    url =  urljoin(GOOGLE_AUTH_BASE_URL, callback_path)
     if drop_https:
         url = url.replace("https://", "http://")
     if force_https:

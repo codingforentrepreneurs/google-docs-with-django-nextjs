@@ -26,6 +26,7 @@ SECRET_KEY = config("DJANGO_SECRET_KEY", cast=str, default=get_random_secret_key
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 
 FRONTEND_URL = config("FRONTEND_URL", cast=str, default="https://djangonext.js")
+
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", cast=list, default=[])
 CSRF_TRUSTED_ORIGINS = config("DJANGO_CSRF_TRUSTED_ORIGINS", cast=list, default=[])
 
@@ -144,3 +145,13 @@ STATICFILES_DIRS = [STATICFILES_BASE_DIR]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+### GOOGLE API OAUTH LOGIN
+
+GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID", default="", cast=str)
+GOOGLE_SECRET_KEY = config("GOOGLE_SECRET_KEY", default="", cast=str)
+GOOGLE_AUTH_BASE_URL = FRONTEND_URL
+GOOGLE_AUTH_CALLBACK_PATH = config("GOOGLE_AUTH_CALLBACK_PATH", default='/google/callback')
+print(GOOGLE_AUTH_BASE_URL, GOOGLE_AUTH_CALLBACK_PATH)

@@ -6,3 +6,6 @@ pydantic[email]
 python-decouple
 dj-database-url
 psycopg[binary]
+google-auth
+google-auth-oauthlib
+google-auth-httplib2

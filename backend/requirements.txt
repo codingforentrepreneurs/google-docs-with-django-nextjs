@@ -11,8 +11,14 @@ asgiref==3.8.1
     #   django
     #   django-cors-headers
     #   django-ninja-extra
+cachetools==5.5.2
+    # via google-auth
+certifi==2025.1.31
+    # via requests
 cffi==1.17.1
     # via cryptography
+charset-normalizer==3.4.1
+    # via requests
 contextlib2==21.6.0
     # via django-ninja-extra
 cryptography==44.0.0
@@ -43,14 +49,35 @@ dnspython==2.7.0
     # via email-validator
 email-validator==2.2.0
     # via pydantic
+google-auth==2.38.0
+    # via
+    #   -r src/requirements/prod.in
+    #   google-auth-httplib2
+    #   google-auth-oauthlib
+google-auth-httplib2==0.2.0
+    # via -r src/requirements/prod.in
+google-auth-oauthlib==1.2.1
+    # via -r src/requirements/prod.in
+httplib2==0.22.0
+    # via google-auth-httplib2
 idna==3.10
-    # via email-validator
+    # via
+    #   email-validator
+    #   requests
 injector==0.22.0
     # via django-ninja-extra
+oauthlib==3.2.2
+    # via requests-oauthlib
 psycopg[binary]==3.2.4
     # via -r src/requirements/prod.in
 psycopg-binary==3.2.4
     # via psycopg
+pyasn1==0.6.1
+    # via
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.4.1
+    # via google-auth
 pycparser==2.22
     # via cffi
 pydantic[email]==2.10.6
@@ -61,8 +88,16 @@ pydantic-core==2.27.2
     # via pydantic
 pyjwt[crypto]==2.10.1
     # via django-ninja-jwt
+pyparsing==3.2.1
+    # via httplib2
 python-decouple==3.8
     # via -r src/requirements/prod.in
+requests==2.32.3
+    # via requests-oauthlib
+requests-oauthlib==2.0.0
+    # via google-auth-oauthlib
+rsa==4.9
+    # via google-auth
 sqlparse==0.5.3
     # via django
 typing-extensions==4.12.2
@@ -71,3 +106,5 @@ typing-extensions==4.12.2
     #   psycopg
     #   pydantic
     #   pydantic-core
+urllib3==2.3.0
+    # via requests
