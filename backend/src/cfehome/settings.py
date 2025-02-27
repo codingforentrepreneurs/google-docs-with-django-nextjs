@@ -43,7 +43,7 @@ if DEBUG:
 # Application definition
 SITE_ID = 1
 INSTALLED_APPS = INSTALLED_APPS
-
+AUTH_USER_MODEL = "accounts.MyUser" # accounts.models.MyUser
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -18,6 +18,7 @@ THIRD_PARTY_INSTALLED_APPS = [
 ]
 
 MY_APPS = [
+    "accounts",
     "profiles"
 ]
 
