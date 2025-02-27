@@ -18,7 +18,11 @@ from django.contrib.auth import login
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from googler import oauth, services, schemas as googler_schemas
+from googler import (
+    oauth as googler_oauth, 
+    services as googler_services, 
+    schemas as googler_schemas
+)
 
 LOGIN_REDIRECT_URL = settings.LOGIN_REDIRECT_URL
 
@@ -80,7 +84,7 @@ def signup(request, payload: EmailLoginSchema):
         response=googler_schemas.GoogleLoginSchema, 
         auth=anon_required)
 def google_login_view(request):
-    google_oauth2_url = oauth.generate_auth_url()
+    google_oauth2_url = googler_oauth.generate_auth_url()
     return {
         "redirect_url": google_oauth2_url
     }
@@ -93,11 +97,11 @@ def google_login_callback_view(request, payload: googler_schemas.GoogleCallbackS
     state = payload.state
     code = payload.code
     try:
-        token_json = oauth.verify_google_oauth_callback(state, code)
+        token_json = googler_oauth.verify_google_oauth_callback(state, code)
     except Exception as e:
         raise HttpError(500, "Could login user. Please try again later")
-    google_user_info = oauth.verify_token_json(token_json)
-    user = services.get_or_create_google_user(google_user_info)
+    google_user_info = googler_oauth.verify_token_json(token_json)
+    user = googler_services.get_or_create_google_user(google_user_info)
     token = RefreshToken.for_user(user)
     return {
         "username": user.display_name,
