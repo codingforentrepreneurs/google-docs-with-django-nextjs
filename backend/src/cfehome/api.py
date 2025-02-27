@@ -13,6 +13,16 @@ from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_jwt.tokens import RefreshToken
 
+from django.conf import settings
+from django.contrib.auth import login
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+
+from googler import oauth, services, schemas as googler_schemas
+
+LOGIN_REDIRECT_URL = settings.LOGIN_REDIRECT_URL
+
+
 User = get_user_model()
 
 api = NinjaExtraAPI(auth=user_or_anon)
@@ -62,3 +72,38 @@ def signup(request, payload: EmailLoginSchema):
         }
     except Exception as e:
         raise HttpError(500, "Could not create user. Please try again later")
+
+
+
+
+@api.get("/google/login/", 
+        response=googler_schemas.GoogleLoginSchema, 
+        auth=anon_required)
+def google_login_view(request):
+    google_oauth2_url = oauth.generate_auth_url()
+    return {
+        "redirect_url": google_oauth2_url
+    }
+
+@api.post("/google/callback/", 
+        response=UserSchema, 
+        auth=anon_required)
+def google_login_callback_view(request, payload: googler_schemas.GoogleCallbackSchema):
+    # print(request.GET)
+    state = payload.state
+    code = payload.code
+    try:
+        token_json = oauth.verify_google_oauth_callback(state, code)
+    except Exception as e:
+        raise HttpError(500, "Could login user. Please try again later")
+    google_user_info = oauth.verify_token_json(token_json)
+    user = services.get_or_create_google_user(google_user_info)
+    token = RefreshToken.for_user(user)
+    return {
+        "username": user.display_name,
+        "email": user.email,
+        "is_authenticated": True,
+        "access_token": str(token.access_token),
+        "refresh_token": str(token),
+    }
+
