@@ -82,19 +82,6 @@ export default function Page() {
                 </div>
               )}
               <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="username"
-                  name="username"
-                  placeholder="Choose a username"
-                  required
-                />
-                {fieldErrors.username && (
-                  <p className="text-sm text-destructive">{fieldErrors.username}</p>
-                )}
-              </div>
-              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"

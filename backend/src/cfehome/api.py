@@ -44,18 +44,17 @@ def login(request, payload: EmailLoginSchema):
 
 
 @api.post("/signup/", response=UserSchema, auth=anon_required)
-def signup(request, new_user: UsernameMandatoryEmailMandatorySchema):
+def signup(request, payload: EmailLoginSchema):
     try:
         user = User.objects.create_user(
-            username=new_user.username,
-            email=new_user.email,
-            password=new_user.password,
+            email=payload.email,
+            password=payload.password,
             is_active=True,
         )
         user.save()
         token = RefreshToken.for_user(user)
         return {
-            "username": user.username,
+            "username": None,
             "email": user.email,
             "is_authenticated": True,
             "access_token": str(token.access_token),
