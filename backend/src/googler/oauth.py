@@ -61,7 +61,7 @@ def generate_auth_url():
         "code_challenge_method": "S256",
         "access_type": "offline",
         # "prompt": "consent",
-        # "prompt": "select_account",
+        "prompt": "select_account",
     }
     encoded_params = urlencode(auth_params)
     google_oauth_url = "https://accounts.google.com/o/oauth2/v2/auth"
