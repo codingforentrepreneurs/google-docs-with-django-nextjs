@@ -33,7 +33,7 @@ def login(request, payload: EmailLoginSchema):
     try:
         token = RefreshToken.for_user(user)
         return {
-            "username": None, 
+            "username": user.display_name, 
             "email": user.email,
             "is_authenticated": True,
             "access_token": str(token.access_token),
@@ -54,7 +54,7 @@ def signup(request, payload: EmailLoginSchema):
         user.save()
         token = RefreshToken.for_user(user)
         return {
-            "username": None,
+            "username": user.display_name,
             "email": user.email,
             "is_authenticated": True,
             "access_token": str(token.access_token),
