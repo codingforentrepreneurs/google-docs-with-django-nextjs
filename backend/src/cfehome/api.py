@@ -79,7 +79,7 @@ def signup(request, payload: EmailLoginSchema):
 
 
 
-
+# /api/google/login/
 @api.get("/google/login/", 
         response=googler_schemas.GoogleLoginSchema, 
         auth=anon_required)
