@@ -61,12 +61,12 @@ export default function Page() {
                 </div>
               )}
                     <div className="grid gap-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                        id="username"
-                        type="username"
-                        name="username"
-                        placeholder="Your username"
+                        id="email"
+                        type="email"
+                        name="email"
+                        placeholder="Your email"
                         required
                     />
                     </div>

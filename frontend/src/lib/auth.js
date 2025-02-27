@@ -1,25 +1,29 @@
+
 const { cookies } = require("next/headers")
 
 const TOKEN_AGE = 3600
 const TOKEN_NAME = "auth-token"
 const TOKEN_REFRESH_NAME = "auth-refresh-token"
 
-export function getToken(){
+export async function getToken(){
     // api requests
-    const myAuthToken = cookies().get(TOKEN_NAME)
+    const cookieStore = await cookies()
+    const myAuthToken = cookieStore.get(TOKEN_NAME)
     return myAuthToken?.value
 }
 
 
-export function getRefreshToken(){
+export async function getRefreshToken(){
     // api requests
-    const myAuthToken = cookies().get(TOKEN_REFRESH_NAME)
+    const cookieStore = await cookies()
+    const myAuthToken = cookieStore.get(TOKEN_REFRESH_NAME)
     return myAuthToken?.value
 }
 
-export function setToken(authToken){
+export async function setToken(authToken){
     // login
-    return cookies().set({
+    const cookieStore = await cookies()
+    const result = cookieStore.set({
         name: TOKEN_NAME,
         value: authToken,
         httpOnly: true, // limit client-side js
@@ -27,11 +31,13 @@ export function setToken(authToken){
         secure: process.env.NODE_ENV !== 'development',
         maxAge: TOKEN_AGE,
     })
+    return result
 }
 
-export function setRefreshToken(authRefreshToken){
+export async function setRefreshToken(authRefreshToken){
     // login
-    return cookies().set({
+    const cookieStore = await cookies()
+    const result = cookieStore.set({
         name: TOKEN_REFRESH_NAME,
         value: authRefreshToken,
         httpOnly: true, // limit client-side js
@@ -39,10 +45,12 @@ export function setRefreshToken(authRefreshToken){
         secure: process.env.NODE_ENV !== 'development',
         maxAge: TOKEN_AGE,
     })
+    return result
 }
 
-export function deleteTokens(){
+export async function  deleteTokens() {
     // logout
-    cookies().delete(TOKEN_REFRESH_NAME)
-    return cookies().delete(TOKEN_NAME)
+    const cookieStore = await cookies()
+    cookieStore.delete(TOKEN_REFRESH_NAME)
+    cookieStore.delete(TOKEN_NAME)
 }

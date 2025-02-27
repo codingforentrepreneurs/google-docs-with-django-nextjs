@@ -24,8 +24,8 @@ export async function POST(request) {
         if (!accessToken || !refreshToken) {
             return NextResponse.json({"detail": "Invalid response from server. Please try again."}, {status: 400})
         }
-        setToken(accessToken)
-        setRefreshToken(refreshToken)
+        await setToken(accessToken)
+        await setRefreshToken(refreshToken)
         return NextResponse.json({"loggedIn": true, "username": responseData.username}, {status: 200})
     }
     return NextResponse.json({"loggedIn": false, ...responseData}, {status: 400})
