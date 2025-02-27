@@ -7,7 +7,7 @@ const DJANGO_API_URL = process.env.DJANGO_API_URL;
 
 export async function POST(request) {
     const requestData = await request.json()
-    const url = urlJoin(DJANGO_API_URL, "token/pair")
+    const url = urlJoin(DJANGO_API_URL, "login")
     const jsonData = JSON.stringify(requestData)
     const requestOptions = {
         method: "POST",

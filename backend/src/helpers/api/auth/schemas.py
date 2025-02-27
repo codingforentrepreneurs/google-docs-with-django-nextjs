@@ -93,3 +93,9 @@ class EmailMandatoryUsernameOptionalSchema(BaseRegistrationSchema):
 class UsernameMandatoryEmailMandatorySchema(BaseRegistrationSchema):
     username: str
     email: str
+
+
+
+class EmailLoginSchema(BaseUserSchema):
+    email: str
+    password: str
