@@ -11,8 +11,15 @@ export default function DocListPage() {
   const isResultsArray = Array.isArray(data)
   const results = data && isResultsArray ? data : []
   console.log(results)
+  if (error) {
+    if (error.status === 401) {
+      window.location.href='/login'
+    }
+    return <div>{error.message} {error.status}</div>
+  }
   return <>
   <div className="max-w-2xl mx-auto px-4">
+    <h1 className='text-4xl font-bold mb-4'>Documents</h1>
   <ul className="list-disc pl-6 space-y-2 mt-4">
     {results.map((doc, idx)=>{
         const docLink = `/docs/${doc.id}`
