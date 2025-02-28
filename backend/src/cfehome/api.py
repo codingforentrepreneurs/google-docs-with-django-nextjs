@@ -24,6 +24,8 @@ from googler import (
     schemas as googler_schemas
 )
 
+from documents.api import router as document_router
+
 LOGIN_REDIRECT_URL = settings.LOGIN_REDIRECT_URL
 
 
@@ -33,6 +35,7 @@ api = NinjaExtraAPI(auth=user_or_anon)
 
 # adds /api/token/refresh/
 api.register_controllers(DjangoNextCustomController)
+api.add_router('/documents', document_router)
 
 
 @api.get("/hello/", auth=user_or_anon)
