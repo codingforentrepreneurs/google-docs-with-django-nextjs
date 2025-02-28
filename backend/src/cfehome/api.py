@@ -44,6 +44,10 @@ def hello(request):
 @api.post("/login/", response=UserSchema, auth=anon_required)
 def login(request, payload: EmailLoginSchema):
     user = authenticate(email=payload.email, password=payload.password)
+    if not user:
+        raise HttpError(400, "Could not login user try again")
+    if not user.is_active:
+       raise HttpError(400, "User is not active")
     try:
         token = RefreshToken.for_user(user)
         return {
@@ -102,6 +106,10 @@ def google_login_callback_view(request, payload: googler_schemas.GoogleCallbackS
         raise HttpError(500, "Could login user. Please try again later")
     google_user_info = googler_oauth.verify_token_json(token_json)
     user = googler_services.get_or_create_google_user(google_user_info)
+    if not user:
+        raise HttpError(400, "Could not login user try again")
+    if not user.is_active:
+       raise HttpError(400, "User is not active")
     token = RefreshToken.for_user(user)
     return {
         "username": user.display_name,
