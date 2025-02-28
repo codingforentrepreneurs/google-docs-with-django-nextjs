@@ -15,6 +15,7 @@ export default function Home() {
       min-h-screen p-2 pb-20 gap-8 sm:p-10 
       font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 items-center sm:items-start">
+        {data && JSON.stringify(data)}
         <Image
           className="w-[300px] md:w-full dark:invert"
           src="/django-nextjs-text.svg"

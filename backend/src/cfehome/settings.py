@@ -3,7 +3,7 @@ Django settings for cfehome project using Django 5.1.5.
 """
 
 from pathlib import Path
-
+from datetime import timedelta
 from django.core.management.utils import get_random_secret_key
 
 # uses python-decouple
@@ -155,3 +155,11 @@ GOOGLE_SECRET_KEY = config("GOOGLE_SECRET_KEY", default="", cast=str)
 GOOGLE_AUTH_BASE_URL = FRONTEND_URL
 GOOGLE_AUTH_CALLBACK_PATH = config("GOOGLE_AUTH_CALLBACK_PATH", default='/google/callback')
 print(GOOGLE_AUTH_BASE_URL, GOOGLE_AUTH_CALLBACK_PATH)
+
+
+##### NINJA JWT SETTINGS 
+
+NINJA_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}

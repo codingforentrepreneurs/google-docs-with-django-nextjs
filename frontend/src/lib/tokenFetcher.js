@@ -1,4 +1,4 @@
-import { getToken } from '@/lib/auth';
+import { getToken, performTokenRefresh } from '@/lib/auth';
 
 export class TokenFetch {
   static async fetch(url, options = {}) {
@@ -10,11 +10,16 @@ export class TokenFetch {
     if (token) {
         options.headers.Authorization = `Bearer ${token}`;
     }
-    const response = await fetch(url, options);
+    let response = await fetch(url, options);
     
 
     if (token && response.status === 401) {
         console.log('attempt token refresh')
+        token = await performTokenRefresh()
+        if (token) {
+            options.headers.Authorization = `Bearer ${token}`;
+        }
+        response = await fetch(url, options);
     }
 
     return response

@@ -31,8 +31,8 @@ User = get_user_model()
 
 api = NinjaExtraAPI(auth=user_or_anon)
 
-# adds /token/ pair/refresh/
-# api.register_controllers(DjangoNextCustomController)
+# adds /api/token/refresh/
+api.register_controllers(DjangoNextCustomController)
 
 
 @api.get("/hello/", auth=user_or_anon)
