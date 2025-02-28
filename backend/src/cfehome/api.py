@@ -37,6 +37,14 @@ api = NinjaExtraAPI(auth=user_or_anon)
 
 @api.get("/hello/", auth=user_or_anon)
 def hello(request):
+    print(request.auth, request.user)
+    if request.auth:
+        user = request.user 
+        if user.is_authenticated:
+            return {
+                "username": user.display_name, 
+                "email": user.email,
+            }
     # print(request)
     return {"message": "Hello World"}
 
