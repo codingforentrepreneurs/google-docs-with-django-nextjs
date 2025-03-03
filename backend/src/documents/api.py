@@ -14,3 +14,10 @@ router = Router()
 def document_list_view(request):
     qs = doc_services.list_documents(request.user)
     return qs
+
+
+@router.get("/{document_id}/", response=DocSchema, auth=user_required)
+def document_detail_view(request, document_id):
+    print(document_id)
+    qs = doc_services.list_documents(request.user)
+    return qs[0]
