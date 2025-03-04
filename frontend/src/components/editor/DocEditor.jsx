@@ -99,5 +99,7 @@ export default function DocEditor({ref, initialData, placeholder}) {
 		};
 	}, [isLayoutReady]);
 
-	return editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} ref={ref && ref} />
+	return <div className='prose'>
+		{editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} ref={ref && ref} />}
+	</div>
 }
