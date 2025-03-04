@@ -4,12 +4,20 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
+
+import dynamic from 'next/dynamic';
+
+const DocEditor = dynamic( () => import( '@/components/editor/DocEditor' ), { ssr: false } );
+
+
 export default function Home() {
   return (
     <div className="grid grid-rows-[auto_1fr_auto] items-start justify-items-center 
       min-h-screen p-2 pb-20 gap-8 sm:p-10 
       font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 items-center sm:items-start">
+
+        <DocEditor />
 
          <Button variant='outline' asChild>
             <Link href='/docs/create'>Create new doc</Link>
