@@ -1,5 +1,6 @@
 from django.core.cache import cache
 
+from . import exceptions
 from .models import Doc
 
 DOC_CACHE_KEY = "documents:list:{user_id}"
@@ -19,5 +20,13 @@ def list_documents(user=None, force=False):
 def get_document(user=None, document_id=None):
     if user is None or document_id is None:
         return None
-    obj = Doc.objects.get(user=user, id=document_id)
+    try:
+        obj = Doc.objects.get(id=document_id)
+    except Doc.DoesNotExist:
+        raise exceptions.DocumentNotFound(f"{document_id} not found.")
+    except:
+        raise exceptions.DocumentNotFound(f"{document_id} not found.")
+    has_permission = obj.user == user
+    if not has_permission:
+        raise exceptions.UserNoPermissionNotAllowed(f"{user} needs access.")
     return obj
