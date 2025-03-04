@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import fetcher from "@/lib/fetcher";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
 import useSWR from "swr";
+
+const DocEditor = dynamic( () => import( '@/components/editor/DocEditor' ), { ssr: false } );
+
 
 export default function DocDetailPage() {
   const {docId} = useParams()
@@ -76,7 +80,7 @@ export default function DocDetailPage() {
                 </div>
             )}
         <Input type='text' defaultValue={doc.title} name='title' />
-        <Textarea className='h-[50vh]' defaultValue={doc.content} name='content'></Textarea>
+        <DocEditor initialData={doc.content} name='content' placeholder='Write your content here!' />
         <Button type='submit'>Save</Button>
       </form>
 
