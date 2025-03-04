@@ -5,7 +5,7 @@ from ninja.errors import HttpError
 from helpers.api.auth.permissions import user_required
 
 from .models import Doc
-from .schemas import DocSchema, DocUpdateSchema
+from .schemas import DocSchema, DocUpdateSchema, DocCreateSchema
 from . import exceptions as doc_exceptions
 from . import services as doc_services
 
@@ -17,6 +17,12 @@ def document_list_view(request):
     qs = doc_services.list_documents(request.user)
     return qs
 
+@router.post("/", response={201: DocSchema}, auth=user_required)
+def document_create_view(request, payload:DocCreateSchema):
+    obj = doc_services.create_document(user=request.user, title=payload.title)
+    if obj is None:
+        raise HttpError(400, "Invalid data, try again.")
+    return 201, obj
 
 def http_document_detail(request, document_id):
     try:

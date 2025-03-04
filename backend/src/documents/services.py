@@ -6,6 +6,13 @@ from .models import Doc
 DOC_CACHE_KEY = "documents:list:{user_id}"
 DOC_CACHE_TIMEOUT = 300
 
+
+def create_document(user=None, title=None):
+    if user is None or title is None:
+        return None
+    return Doc.objects.create(user=user, title=title)
+
+
 def list_documents(user=None, force=False):
     if user is None:
         return []
