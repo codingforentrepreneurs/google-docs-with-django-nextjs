@@ -5,10 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 
-import dynamic from 'next/dynamic';
-
-const DocEditor = dynamic( () => import( '@/components/editor/DocEditor' ), { ssr: false } );
-
 
 export default function Home() {
   return (
@@ -17,7 +13,7 @@ export default function Home() {
       font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 items-center sm:items-start">
 
-        <DocEditor />
+      
 
          <Button variant='outline' asChild>
             <Link href='/docs/create'>Create new doc</Link>

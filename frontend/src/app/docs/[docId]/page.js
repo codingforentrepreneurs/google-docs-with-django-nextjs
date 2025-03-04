@@ -9,7 +9,7 @@ import fetcher from "@/lib/fetcher";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import useSWR from "swr";
 
@@ -18,6 +18,7 @@ const DocEditor = dynamic( () => import( '@/components/editor/DocEditor' ), { ss
 
 export default function DocDetailPage() {
   const {docId} = useParams()
+  const editorRef = useRef(null)
   const {isAuthenticated} = useAuth()
   const apiEndpoint = `/api/documents/${docId}`
   const {data:doc, isLoading, error, mutate} = useSWR(apiEndpoint, fetcher)
@@ -42,8 +43,10 @@ export default function DocDetailPage() {
   async function handleSubmit (event) {
     event.preventDefault()
     setFormError("") // Clear any previous errors
+    const content = editorRef.current.editor.getData()
     const formData = new FormData(event.target)
     const objectFromForm = Object.fromEntries(formData)
+    objectFromForm['content'] = content
     const jsonData = JSON.stringify(objectFromForm)
     const requestOptions = {
         method: "PUT",
@@ -80,7 +83,7 @@ export default function DocDetailPage() {
                 </div>
             )}
         <Input type='text' defaultValue={doc.title} name='title' />
-        <DocEditor initialData={doc.content} name='content' placeholder='Write your content here!' />
+        <DocEditor ref={editorRef} initialData={doc.content} name='content' placeholder='Write your content here!' />
         <Button type='submit'>Save</Button>
       </form>
 

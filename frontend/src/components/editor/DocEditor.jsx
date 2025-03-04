@@ -13,9 +13,7 @@ import './docEditor.css';
  */
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
-export default function DocEditor({initialData, placeholder}) {
-	const editorContainerRef = useRef(null);
-	const editorRef = useRef(null);
+export default function DocEditor({ref, initialData, placeholder}) {
 	const [isLayoutReady, setIsLayoutReady] = useState(false);
 
 	useEffect(() => {
@@ -56,13 +54,5 @@ export default function DocEditor({initialData, placeholder}) {
 		};
 	}, [isLayoutReady]);
 
-	return (
-		<div>
-			<div ref={editorContainerRef}>
-				<div>
-					<div ref={editorRef}>{editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} />}</div>
-				</div>
-			</div>
-		</div>
-	);
+	return editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} ref={ref && ref} />
 }
