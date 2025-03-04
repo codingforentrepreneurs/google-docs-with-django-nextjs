@@ -13,7 +13,7 @@ import './docEditor.css';
  */
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
-export default function DocEditor({ref, initialData, placeholder}) {
+export default function DocEditor({ref, initialData, placeholder, onSave}) {
 	const [isLayoutReady, setIsLayoutReady] = useState(false);
 
 	useEffect(() => {
@@ -79,6 +79,10 @@ export default function DocEditor({ref, initialData, placeholder}) {
 						}
 					]
 				},
+				autosave: onSave ? {
+					waitingTime: 5000,
+					save: onSave,
+				} : null,
 				initialData: initialData ? initialData: '',
 				licenseKey: LICENSE_KEY,
 				link: {

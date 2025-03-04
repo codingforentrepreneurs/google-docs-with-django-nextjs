@@ -19,6 +19,8 @@ const DocEditor = dynamic( () => import( '@/components/editor/DocEditor' ), { ss
 export default function DocDetailPage() {
   const {docId} = useParams()
   const editorRef = useRef(null)
+  const submitBtnRef = useRef(null)
+  const [saving, setSaving] = useState(false)
   const {isAuthenticated} = useAuth()
   const apiEndpoint = `/api/documents/${docId}`
   const {data:doc, isLoading, error, mutate} = useSWR(apiEndpoint, fetcher)
@@ -42,6 +44,7 @@ export default function DocDetailPage() {
   }
   async function handleSubmit (event) {
     event.preventDefault()
+    setSaving(true)
     setFormError("") // Clear any previous errors
     const content = editorRef.current.editor.getData()
     const formData = new FormData(event.target)
@@ -64,12 +67,19 @@ export default function DocDetailPage() {
     }
     // const data = await response.json()
     if (response.ok) {
+       setSaving(false)
         mutate()
     } else {
+      setSaving(false)
       console.log(data)
       setFormError(data.message || "Save failed.")
     }
 }
+
+ const handleOnSave = (editor) => {
+  console.log(editor)
+  submitBtnRef.current.click()
+ }
 
 
   const title = doc?.title ? doc.title : "Document"
@@ -83,9 +93,13 @@ export default function DocDetailPage() {
                 </div>
             )}
         <Input type='text' defaultValue={doc.title} name='title' />
-        <DocEditor ref={editorRef} initialData={doc.content} name='content' placeholder='Write your content here!' />
-        <Button type='submit'>Save</Button>
+        <DocEditor 
+          onSave={handleOnSave}
+        ref={editorRef} 
+        initialData={doc.content} name='content' placeholder='Write your content here!' />
+        <Button  ref={submitBtnRef} type='submit'> {saving ? 'Saving' : 'Save'}</Button>
       </form>
+      {saving && <p>Saving...</p>}
 
     </div>
   </>
