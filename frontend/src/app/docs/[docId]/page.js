@@ -13,6 +13,7 @@ export default function DocDetailPage() {
   const {isAuthenticated} = useAuth()
   const apiEndpoint = `/api/documents/${docId}`
   const {data, isLoading, error} = useSWR(apiEndpoint, fetcher)
+  console.log(data)
   const isResultsArray = Array.isArray(data)
   const results = data && isResultsArray ? data : []
   console.log(results)

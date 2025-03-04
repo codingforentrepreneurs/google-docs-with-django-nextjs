@@ -15,3 +15,9 @@ def list_documents(user=None, force=False):
     qs = Doc.objects.filter(user=user).values('id', 'content', 'title')
     cache.set(cache_key, qs, timeout=DOC_CACHE_TIMEOUT)
     return qs
+
+def get_document(user=None, document_id=None):
+    if user is None or document_id is None:
+        return None
+    obj = Doc.objects.get(user=user, id=document_id)
+    return obj
