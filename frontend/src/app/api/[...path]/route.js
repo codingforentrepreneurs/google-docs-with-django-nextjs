@@ -59,3 +59,35 @@ export async function POST(request, { params }) {
     );
   }
 }
+
+
+export async function PUT(request, { params }) {
+  const path = (await params).path;
+  const url = urlJoin(DJANGO_API_URL, path)  + request.nextUrl.search;
+  try {
+    const body = await request.json();
+    const response = await TokenFetch.fetch(url, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+        // Forward other headers as needed
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      return NextResponse.json(
+        data,
+        { status: response.status }
+      );
+    }
+
+    
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to post to backend' },
+      { status: 500 }
+    );
+  }
+}
