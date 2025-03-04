@@ -52,3 +52,11 @@ def document_update_view(request, document_id, payload:DocUpdateSchema):
     # obj.last_updated_by = request.user
     obj.save()
     return obj
+
+
+"""
+@router.delete("/{document_id}/", response={204: Any}, auth=user_required)
+def document_update_view(request, document_id, payload:DocUpdateSchema): 
+    obj = http_document_detail(request, document_id)
+    return 204, "Item delete"
+"""
