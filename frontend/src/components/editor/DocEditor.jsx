@@ -2,13 +2,24 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline } from 'ckeditor5';
-import { AIAssistant, AIRequestError, AITextAdapter } from 'ckeditor5-premium-features';
+import { CloudServices, ClassicEditor, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline } from 'ckeditor5';
+import { PresenceList, RealTimeCollaborativeEditing, AIAssistant, AIRequestError, AITextAdapter } from 'ckeditor5-premium-features';
+
+import 'ckeditor5/ckeditor5.css';
+import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
+
 
 import 'ckeditor5/ckeditor5.css';
 import './docEditor.css';
 import useSWR from 'swr';
 import fetcher from '@/lib/fetcher';
+
+const COLAB_PLUGINS = [
+	CloudServices,
+	PresenceList,
+	RealTimeCollaborativeEditing
+
+]
 
 class CustomerAITextAdapter extends AITextAdapter {
 	async sendRequest ( requestData ) {
@@ -33,10 +44,14 @@ class CustomerAITextAdapter extends AITextAdapter {
 	}
 }
 
+const CLOUD_SERVICES_TOKEN_URL =
+	'https://ad01wo2dm__n.cke-cs.com/token/dev/cfef2eb70dfcfd047a067464f456a01ba132626e078c41088531cf33b044?limit=10';
+const CLOUD_SERVICES_WEBSOCKET_URL = 'wss://ad01wo2dm__n.cke-cs.com/ws';
 
-export default function DocEditor({ref, initialData, placeholder, onSave}) {
+export default function DocEditor({ref, initialData, placeholder, onSave, docId}) {
 	const [isLayoutReady, setIsLayoutReady] = useState(false);
 	const {data, isLoading} = useSWR('/api/ckeditor', fetcher)
+	const editorPresenceRef = useRef(null)
 	const license =  data?.license ? data?.license : 'GPL'
 	useEffect(() => {
 		setIsLayoutReady(true);
@@ -58,7 +73,17 @@ export default function DocEditor({ref, initialData, placeholder, onSave}) {
 					items: ['aiCommands', 'aiAssistant', '|','heading', 'bold', 'italic', 'underline', 'blockquote', '|', 'link'],
 					shouldNotGroupWhenFull: false
 				},
-				plugins: [AIAssistant, CustomerAITextAdapter, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline],
+				plugins: COLAB_PLUGINS.concat([AIAssistant, CustomerAITextAdapter, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline]),
+				cloudServices: {
+					tokenUrl: CLOUD_SERVICES_TOKEN_URL,
+					webSocketUrl: CLOUD_SERVICES_WEBSOCKET_URL
+				},
+				collaboration: {
+					channelId: `${docId}`,
+				},
+				presenceList: {
+					container: editorPresenceRef.current
+				},
 				heading: {
 					options: [
 						{
@@ -129,6 +154,8 @@ export default function DocEditor({ref, initialData, placeholder, onSave}) {
 	}, [isLayoutReady, isLoading]);
 
 	return <div className='prose'>
+		<div className="presence mb-2" ref={editorPresenceRef}></div>
+
 		{editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} ref={ref && ref} />}
 	</div>
 }

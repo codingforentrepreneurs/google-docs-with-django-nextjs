@@ -96,6 +96,7 @@ export default function DocDetailPage() {
         <DocEditor 
           onSave={handleOnSave}
         ref={editorRef} 
+        docId={docId}
         initialData={doc.content} name='content' placeholder='Write your content here!' />
         <Button  ref={submitBtnRef} type='submit'> {saving ? 'Saving' : 'Save'}</Button>
       </form>
