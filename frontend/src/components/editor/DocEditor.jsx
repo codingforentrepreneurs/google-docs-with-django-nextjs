@@ -3,16 +3,26 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ClassicEditor, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline } from 'ckeditor5';
+import { AIAssistant, AITextAdapter } from 'ckeditor5-premium-features';
 
 import 'ckeditor5/ckeditor5.css';
-
 import './docEditor.css';
 import useSWR from 'swr';
+import fetcher from '@/lib/fetcher';
+
+class CustomerAITextAdapter extends AITextAdapter {
+	async sendRequest ( requestData ) {
+		const {query, context} = requestData
+		console.log(context)
+
+		requestData.onData(query)
+	}
+}
 
 
 export default function DocEditor({ref, initialData, placeholder, onSave}) {
 	const [isLayoutReady, setIsLayoutReady] = useState(false);
-	const {data} = useSWR('/api/ckeditor')
+	const {data, isLoading} = useSWR('/api/ckeditor', fetcher)
 	const license =  data?.license ? data?.license : 'GPL'
 	useEffect(() => {
 		setIsLayoutReady(true);
@@ -24,14 +34,17 @@ export default function DocEditor({ref, initialData, placeholder, onSave}) {
 		if (!isLayoutReady) {
 			return {};
 		}
+		if (isLoading) {
+			return {};
+		}
 
 		return {
 			editorConfig: {
 				toolbar: {
-					items: ['heading', 'bold', 'italic', 'underline', 'blockquote', '|', 'link'],
+					items: ['aiCommands', 'aiAssistant', '|','heading', 'bold', 'italic', 'underline', 'blockquote', '|', 'link'],
 					shouldNotGroupWhenFull: false
 				},
-				plugins: [AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline],
+				plugins: [AIAssistant, CustomerAITextAdapter, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline],
 				heading: {
 					options: [
 						{
@@ -99,7 +112,7 @@ export default function DocEditor({ref, initialData, placeholder, onSave}) {
 				placeholder: placeholder ? placeholder : 'Type or paste your content here!'
 			}
 		};
-	}, [isLayoutReady]);
+	}, [isLayoutReady, isLoading]);
 
 	return <div className='prose'>
 		{editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} ref={ref && ref} />}
