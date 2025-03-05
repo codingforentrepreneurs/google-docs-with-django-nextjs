@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, AutoLink, Autosave, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline } from 'ckeditor5';
+import { ClassicEditor, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline } from 'ckeditor5';
 
 import 'ckeditor5/ckeditor5.css';
 
@@ -30,10 +30,10 @@ export default function DocEditor({ref, initialData, placeholder, onSave}) {
 		return {
 			editorConfig: {
 				toolbar: {
-					items: ['heading', 'bold', 'italic', 'underline', '|', 'link'],
+					items: ['heading', 'bold', 'italic', 'underline', 'blockquote', '|', 'link'],
 					shouldNotGroupWhenFull: false
 				},
-				plugins: [AutoLink, Autosave, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline],
+				plugins: [AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline],
 				heading: {
 					options: [
 						{
