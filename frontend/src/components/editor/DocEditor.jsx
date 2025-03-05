@@ -7,15 +7,13 @@ import { ClassicEditor, AutoLink, Autosave, BlockQuote, Bold, Essentials, Headin
 import 'ckeditor5/ckeditor5.css';
 
 import './docEditor.css';
+import useSWR from 'swr';
 
-/**
- * Create a free account with a trial: https://portal.ckeditor.com/checkout?plan=free
- */
-const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
 export default function DocEditor({ref, initialData, placeholder, onSave}) {
 	const [isLayoutReady, setIsLayoutReady] = useState(false);
-
+	const {data} = useSWR('/api/ckeditor')
+	const license =  data?.license ? data?.license : 'GPL'
 	useEffect(() => {
 		setIsLayoutReady(true);
 
@@ -84,7 +82,7 @@ export default function DocEditor({ref, initialData, placeholder, onSave}) {
 					save: onSave,
 				} : null,
 				initialData: initialData ? initialData: '',
-				licenseKey: LICENSE_KEY,
+				licenseKey: license,
 				link: {
 					addTargetToExternalLinks: true,
 					defaultProtocol: 'https://',
