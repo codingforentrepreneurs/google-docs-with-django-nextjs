@@ -163,3 +163,8 @@ NINJA_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+
+
+#### CKEDITOR SETTINGS
+CKEDITOR_ACCESS_CREDS = config("CKEDITOR_ACCESS_CREDS", default="", cast=str)

@@ -1,4 +1,6 @@
+import jwt # django-ninja
 from datetime import datetime, timezone
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 
@@ -14,6 +16,11 @@ def get_user_token(user_id):
 
     username = f"{user_instance.display_name}"
     iat = int(datetime.now(timezone.utc).timestamp())
+    algo = "HS256"
+    headers = {
+        "typ": "JWT",
+        "alg": algo
+    }
     payload = {
         "aud": f"{CKEDITOR_ENVIRONMENT_ID}",
         "iat": iat,
@@ -30,3 +37,10 @@ def get_user_token(user_id):
             }
         }
     }
+    signed_token = jwt.encode(
+        payload=payload,
+        key=settings.CKEDITOR_ACCESS_CREDS,
+        algorithm=algo,
+        headers=headers,
+    )
+    return signed_token
