@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.core.cache import cache
 
 from . import exceptions
@@ -20,7 +21,10 @@ def list_documents(user=None, force=False):
     cached_qs = cache.get(cache_key)
     if cached_qs and not force:
         return cached_qs
-    qs = Doc.objects.filter(user=user).values('id', 'content', 'title')
+    qs = Doc.objects.filter(
+        Q(user=user) |
+        Q(docuser__user=user)
+    ).values('id', 'content', 'title')
     cache.set(cache_key, qs, timeout=DOC_CACHE_TIMEOUT)
     return qs
 
@@ -33,7 +37,9 @@ def get_document(user=None, document_id=None):
         raise exceptions.DocumentNotFound(f"{document_id} not found.")
     except:
         raise exceptions.DocumentNotFound(f"{document_id} not found.")
-    has_permission = obj.user == user
+    is_owner = obj.user == user
+    is_doc_user = obj.docuser_set.filter(user=user, active=True).exists()
+    has_permission = is_owner or is_doc_user
     if not has_permission:
         raise exceptions.UserNoPermissionNotAllowed(f"{user} needs access.")
     return obj
