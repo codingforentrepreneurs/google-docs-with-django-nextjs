@@ -44,6 +44,7 @@ class CustomerAITextAdapter extends AITextAdapter {
 	}
 }
 
+// /api/accounts/ckeditor/token/
 const CLOUD_SERVICES_TOKEN_URL =
 	'https://ad01wo2dm__n.cke-cs.com/token/dev/cfef2eb70dfcfd047a067464f456a01ba132626e078c41088531cf33b044?limit=10';
 const CLOUD_SERVICES_WEBSOCKET_URL = 'wss://ad01wo2dm__n.cke-cs.com/ws';
@@ -53,11 +54,32 @@ export default function DocEditor({ref, initialData, placeholder, onSave, docId}
 	const {data, isLoading} = useSWR('/api/ckeditor', fetcher)
 	const editorPresenceRef = useRef(null)
 	const license =  data?.license ? data?.license : 'GPL'
+	
 	useEffect(() => {
 		setIsLayoutReady(true);
 
 		return () => setIsLayoutReady(false);
 	}, []);
+
+	const fetchUserToken = async () => {
+		const endpoint = '/api/accounts/ckeditor/token/'
+		const options = {
+			method: "GET",
+			headers: {
+				'Content-Type': 'application/json'
+			}, 
+		}
+		const response = await fetch(endpoint, options)
+		if (!response.ok) {
+			throw new Error("Invalid token")
+		}
+		const data = await response.json()
+		const {myUserToken} = data
+		if (!myUserToken) {
+			throw new Error("Invalid token")
+		}
+		return myUserToken
+	}
 
 	const { editorConfig } = useMemo(() => {
 		if (!isLayoutReady) {
@@ -75,7 +97,7 @@ export default function DocEditor({ref, initialData, placeholder, onSave, docId}
 				},
 				plugins: COLAB_PLUGINS.concat([AIAssistant, CustomerAITextAdapter, AutoLink, Autosave, BlockQuote, Bold, Essentials, Heading, Italic, Link, Paragraph, Underline]),
 				cloudServices: {
-					tokenUrl: CLOUD_SERVICES_TOKEN_URL,
+					tokenUrl: fetchUserToken,
 					webSocketUrl: CLOUD_SERVICES_WEBSOCKET_URL
 				},
 				collaboration: {

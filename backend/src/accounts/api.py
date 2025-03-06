@@ -43,6 +43,7 @@ def get_user_token(user_id):
     signed_token = jwt.encode(
         payload=payload,
         key=settings.CKEDITOR_ACCESS_CREDS,
+        # key=settings.SECRET_KEY,
         algorithm=algo,
         headers=headers,
     )
@@ -52,8 +53,8 @@ def get_user_token(user_id):
 router = Router(auth=user_required)
 
 
-@router.get("/ckeditor/token")
+@router.get("/ckeditor/token/")
 def ckeditor_token_view(request):
     user = request.user
     token = get_user_token(user.id)
-    return {"token": token}
+    return {"myUserToken": token}
