@@ -2,7 +2,10 @@ import jwt # django-ninja
 from datetime import datetime, timezone
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from helpers.api.auth.permissions import user_required
 
+
+from ninja import Router 
 
 User = get_user_model()
 
@@ -44,3 +47,13 @@ def get_user_token(user_id):
         headers=headers,
     )
     return signed_token
+
+# users are required
+router = Router(auth=user_required)
+
+
+@router.get("/ckeditor/token")
+def ckeditor_token_view(request):
+    user = request.user
+    token = get_user_token(user.id)
+    return {"token": token}

@@ -24,6 +24,7 @@ from googler import (
     schemas as googler_schemas
 )
 
+from accounts.api import router as accounts_router
 from ai.api import router as ai_router
 from documents.api import router as document_router
 
@@ -36,6 +37,7 @@ api = NinjaExtraAPI(auth=user_or_anon)
 
 # adds /api/token/refresh/
 api.register_controllers(DjangoNextCustomController)
+api.add_router('/accounts', accounts_router)
 api.add_router('/ai', ai_router)
 api.add_router('/documents', document_router)
 
