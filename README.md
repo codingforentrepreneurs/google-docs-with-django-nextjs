@@ -1,6 +1,6 @@
 # Building a Modern Docs Platform with Django, Next.js, CKEditor, and Google OAuth
 
-⭐️ Thanks to [CKEditor](https://ckeditor.com/) parterning with us on this course!
+⭐️ Thanks to [CKEditor](https://ckeditor.com/?utm_campaign=devrel_cfe_course&utm_source=youtube&utm_medium=referral&utm_term=social) parterning with us on this course!
 
 ## Course Resources
 - 🎥 **YouTube video**: [Watch the course](https://youtu.be/OGCE3OUO4G8)
